@@ -17,12 +17,10 @@ function Register() {
             if(data){
                 dispatch(authRegister(data.user))
                 navigate('/chats')
-            }else{
-                navigate('/register')
             }
-            
         } catch (error) {
             console.error(error)
+            navigate('/register')
         }
     }
   return (

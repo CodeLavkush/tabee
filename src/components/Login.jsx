@@ -3,7 +3,7 @@ import {Input, Button} from './index'
 import { useForm } from 'react-hook-form'
 import { getCurrentUser, login } from '../api/userAuth'
 import {login as authLogin, setUser } from '../store/userAuthSlice'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 function Login() {
@@ -11,8 +11,6 @@ function Login() {
   const { register, handleSubmit } = useForm()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const udata = useSelector((state)=> state.userAuth.userData)
-  console.log(udata);
   
   
 
@@ -22,11 +20,10 @@ function Login() {
       if(data){
         await getCurrentUser().then((res)=> dispatch(setUser(res.data)))
         navigate('/chats')
-      }else{
-        navigate('/')
       }
     } catch (error) {
       console.error(error)
+      navigate('/')
     }
   }
 

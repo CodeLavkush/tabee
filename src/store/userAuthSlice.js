@@ -29,11 +29,15 @@ const userAuthSlice = createSlice({
         },
         setRole: (state, action)=>{
             state.userData = {...state.userData, role: action.payload}
+        },
+        verifyEmail: (state, action)=>{
+            state.status = true
+            state.userData = action.payload
         }
     }
 })
 
-export const {login, logout, register, setUser, setRole, refreshToken} = userAuthSlice.actions
+export const {login, logout, register, setUser, setRole, refreshToken, verifyEmail} = userAuthSlice.actions
 
 
 export default userAuthSlice.reducer

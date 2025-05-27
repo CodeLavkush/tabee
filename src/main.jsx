@@ -15,23 +15,15 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Home/>
+        element: <Home/>,
       },
       {
         path: '/login',
-        element: (
-          <AuthLayout authentication={false}>
-            <Login/>
-          </AuthLayout>
-        )
+        element: <Login/>,
       },
       {
         path: '/register',
-        element: (
-          <AuthLayout authentication={false}>
-            <Register/>
-          </AuthLayout>
-        )
+        element: <Register/>,
       },
       {
         path: '/chats',
@@ -43,11 +35,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/verify-email/:token',
-        element: (
-          <AuthLayout authentication={false}>
-            <VerifyEmail/>
-          </AuthLayout>
-        )
+        element: <VerifyEmail/>,
       }
     ],
   }
