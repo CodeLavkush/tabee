@@ -6,7 +6,7 @@ import './index.css'
 import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import { AuthLayout } from './components/index.js'
-import { Chats, Login, Register, Home } from './pages/index.js'
+import { Chats, Login, Register, Home, VerifyEmail } from './pages/index.js'
 
 const router = createBrowserRouter([
   {
@@ -40,15 +40,22 @@ const router = createBrowserRouter([
             <Chats/>
           </AuthLayout>
         )
+      },
+      {
+        path: '/verify-email/:token',
+        element: (
+          <AuthLayout authentication={false}>
+            <VerifyEmail/>
+          </AuthLayout>
+        )
       }
     ],
   }
 ])
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router}/>
-    </Provider>
-  </StrictMode>,
+
+  <Provider store={store}>
+    <RouterProvider router={router}/>
+  </Provider>
 )

@@ -3,6 +3,7 @@ import Login from "./Login";
 import Button from "./Button";
 import Register from "./register";
 import AuthLayout from "./AuthLayout";
+import VerifyEmail from "./VerifyEmail";
 
 export {
     Input,
@@ -10,4 +11,5 @@ export {
     Button,
     Register,
     AuthLayout,
+    VerifyEmail,
 }

@@ -145,6 +145,29 @@ async function assignRole(userId, userAssignRole) {
     }
 }
 
+async function verifyEmail(token) {
+    const options = {method: 'GET', headers: {accept: 'application/json'}}
+    try {
+        const response = await fetch(`${conf.authUrl}/verify-email/${token}`, options)
+
+        if(!response.ok){
+            console.error("API request failed with status: ", response.status)
+            return null
+        }
+
+        const apiData = response.json()
+
+        if(!apiData){
+            console.error("Response return no data")
+            return null
+        }
+
+        return apiData
+    } catch (error) {
+        console.error("Error while verifying the email: ", error)
+    }
+}
+
 async function resendVerificationEmail() {
 
     const options = {method: 'POST', headers: {accept: 'application/json'}};
@@ -177,5 +200,6 @@ export {
     logout,
     refreshToken,
     assignRole,
-    resendVerificationEmail
+    resendVerificationEmail,
+    verifyEmail
 }
