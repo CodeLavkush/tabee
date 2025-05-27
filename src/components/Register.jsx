@@ -4,17 +4,21 @@ import { useDispatch } from 'react-redux'
 import { register as authRegister } from '../store/userAuthSlice'
 import { register as apiRegister  } from '../api/userAuth'
 import { Input, Button } from './index'
+import { useNavigate } from 'react-router-dom'
 
 function Register() {
     const { register, handleSubmit } = useForm()
     const dispatch = useDispatch()
-
+    const navigate = useNavigate()
 
     const submit = async (userData)=>{
         try {
             const data = await apiRegister(userData).then((res)=> res.data)
             if(data){
                 dispatch(authRegister(data.user))
+                navigate('/chats')
+            }else{
+                navigate('/register')
             }
             
         } catch (error) {
