@@ -2,7 +2,7 @@ import conf from '../conf/conf'
 
 
 async function getCurrentUser(){
-    const options = {method: 'GET', headers: {accept: 'application/json'}};
+    const options = {method: 'GET', headers: {accept: 'application/json'}, credentials: 'include'};
 
     try {
         const response = await fetch(`${conf.authUrl}/current-user`, options)
@@ -48,7 +48,7 @@ async function register(user) {
 }
 
 async function login(user) {
-    const options = {method: 'POST', headers: {accept: 'application/json', 'content-type': 'application/json'}, body: JSON.stringify(user)};
+    const options = {method: 'POST', headers: {accept: 'application/json', 'content-type': 'application/json'}, body: JSON.stringify(user),  credentials: 'include'};
 
     try {
         const response = await fetch(`${conf.authUrl}/login`, options)

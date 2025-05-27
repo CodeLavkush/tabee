@@ -1,8 +1,8 @@
 import React from 'react'
 import {Input, Button} from './index'
 import { useForm } from 'react-hook-form'
-import { login, getCurrentUser } from '../api/userAuth'
-import {login as authLogin } from '../store/userAuthSlice'
+import { getCurrentUser, login } from '../api/userAuth'
+import {login as authLogin, setUser } from '../store/userAuthSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -11,13 +11,17 @@ function Login() {
   const { register, handleSubmit } = useForm()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const udata = useSelector((state)=> state.userAuth.userData)
+  console.log(udata);
+  
+  
 
   const submit = async (userData)=>{
     try {
-      const data = await login(userData).then((res)=> dispatch(authLogin(res.data.user))) //TODO: improve this to get user after login
+      const data = await login(userData).then((res)=> dispatch(authLogin(res.data.user)))
       if(data){
+        await getCurrentUser().then((res)=> dispatch(setUser(res.data)))
         navigate('/chats')
-        await getCurrentUser().then((res)=> dispatch(authLogin(res.data)))
       }else{
         navigate('/')
       }
