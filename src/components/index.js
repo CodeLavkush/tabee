@@ -4,6 +4,8 @@ import Button from "./Button";
 import Register from "./register";
 import AuthLayout from "./AuthLayout";
 import VerifyEmail from "./VerifyEmail";
+import ThemeProvider from './ThemeProvider'
+import ModeToggle  from "./ModeToggle";
 
 export {
     Input,
@@ -12,4 +14,6 @@ export {
     Register,
     AuthLayout,
     VerifyEmail,
+    ThemeProvider,
+    ModeToggle,
 }

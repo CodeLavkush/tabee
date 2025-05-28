@@ -1,14 +1,16 @@
 import { useState } from 'react'
-import { Login, Register } from './components'
+import { ThemeProvider } from './components'
 import { Outlet } from 'react-router'
 
 function App() {
 
   return (
     <>
-      <div className='w-screen h-screen bg-slate-700 grid place-content-center'>
+      <ThemeProvider>
+        <div className='w-screen h-screen'>
           <Outlet/>
-      </div>
+        </div>
+      </ThemeProvider>
     </>
   )
 }
