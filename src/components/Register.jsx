@@ -16,7 +16,7 @@ function Register() {
             const data = await apiRegister(userData).then((res)=> res.data)
             if(data){
                 dispatch(authRegister(data.user))
-                navigate('/chats')
+                navigate('/login')
             }
         } catch (error) {
             console.error(error)

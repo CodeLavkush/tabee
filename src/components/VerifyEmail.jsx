@@ -1,39 +1,50 @@
-import React, { useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { verifyEmail } from '../api/userAuth'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams, Link } from 'react-router-dom'
+import { verifyEmail, resendVerificationEmail, getCurrentUser } from '../api/userAuth'
 import { useDispatch } from 'react-redux'
-import { verifyEmail as authVerifyEmail } from '../store/userAuthSlice'
-import { getCurrentUser } from '../api/userAuth'
+import { setUser } from '../store/userAuthSlice'
 
 
 function VerifyEmail() {
     const { token } = useParams()
     const navigate = useNavigate()
+    const [message, setMessage] = useState('')
+    const [isEmailVerified , setIsEmailVerified] = useState(false)
     const dispatch = useDispatch()
+
+    const handleResendVerifyEmail = async ()=>{
+        try {
+            const message = await resendVerificationEmail().then((res)=> res.message)
+            setMessage(message)
+        } catch (error) {
+            console.error(error)
+        }
+    }
     
     useEffect(()=>{
         const confirmEmail = async ()=>{
             try {
                 const emailToken = await verifyEmail(token).then((res)=> res.data)
-                const userData = await getCurrentUser().then((res)=> res.data)
-                console.log(userData)
-                if(emailToken.isEmailVerified && userData){
-                    setTimeout(() => {
-                        dispatch(authVerifyEmail(userData))
-                        navigate('/chats')
-                    }, 2000)
-                }
+                setIsEmailVerified(emailToken.isEmailVerified)
+                await getCurrentUser().then((res)=> dispatch(setUser(res.data)))
             } catch (error) {
                 console.error(error)
-                navigate('/login')
             }
         }
         confirmEmail()
     }, [token, navigate])
 
-  return (
-    <div className='text-4xl text-white'>Verifying Email......</div>
-  )
+    return isEmailVerified ? 
+        (
+            <div>Your email is verified. Start your<Link to='/chats' >Chats</Link></div>
+        ) : 
+        (
+            <div>
+                <p>Your email is not verified please check your email.</p>
+                <button onClick={handleResendVerifyEmail}>Resend verification email</button>
+                <p>{message}</p>
+            </div>
+        )
 }
 
 export default VerifyEmail

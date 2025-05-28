@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {Input, Button} from './index'
 import { useForm } from 'react-hook-form'
-import { getCurrentUser, login } from '../api/userAuth'
-import {login as authLogin, setUser } from '../store/userAuthSlice'
+import { login } from '../api/userAuth'
+import {login as authLogin } from '../store/userAuthSlice'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -11,19 +11,19 @@ function Login() {
   const { register, handleSubmit } = useForm()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  
-  
 
   const submit = async (userData)=>{
     try {
-      const data = await login(userData).then((res)=> dispatch(authLogin(res.data.user)))
-      if(data){
-        await getCurrentUser().then((res)=> dispatch(setUser(res.data)))
+      const user = await login(userData).then((res)=> res.data.user)
+      dispatch(authLogin(user))
+      if(user && user.isEmailVerified){
         navigate('/chats')
+      }else{
+        navigate('/verify-email/:token')
       }
     } catch (error) {
       console.error(error)
-      navigate('/')
+      navigate('/login')
     }
   }
 

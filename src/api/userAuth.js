@@ -170,7 +170,7 @@ async function verifyEmail(token) {
 
 async function resendVerificationEmail() {
 
-    const options = {method: 'POST', headers: {accept: 'application/json'}};
+    const options = {method: 'POST', headers: {accept: 'application/json'}, credentials: 'include'};
 
     try {
         const response = await fetch(`${conf.authUrl}/resend-email-verification`, options)
