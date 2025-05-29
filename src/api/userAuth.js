@@ -159,10 +159,9 @@ async function verifyEmail(token) {
 
         const apiData = await response.json()
 
-        if(!apiData.success){
-            toast("Error", {
-                description: apiData.message
-            })
+        if(!apiData.data){
+            console.error(apiData.message)
+            return null
         }
 
         return apiData

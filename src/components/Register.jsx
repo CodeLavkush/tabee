@@ -4,7 +4,8 @@ import { useDispatch } from 'react-redux'
 import { register as authRegister } from '../store/userAuthSlice'
 import { register as apiRegister  } from '../api/userAuth'
 import { Input, Button } from './index'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
+import { toast } from 'sonner';
 
 function Register() {
     const { register, handleSubmit, formState: {errors}, } = useForm()
@@ -13,7 +14,12 @@ function Register() {
 
     const submit = async (userData)=>{
         try {
-            const data = await apiRegister(userData).then((res)=> res.data)
+            const data = await apiRegister(userData).then((res)=> {
+                toast("Message", {
+                    description: res.message
+                })
+                return res.data
+            })
             if(data){
                 dispatch(authRegister(data.user))
                 navigate('/login')
@@ -25,7 +31,8 @@ function Register() {
     }
   return (
     <div className='w-screen h-screen flex justify-center items-center p-4'>
-        <div className='w-120 h-100 bg-secondary p-2 rounded-lg'>
+        <div className='w-120 h-auto bg-secondary rounded-lg flex justify-center items-center flex-col p-4 gap-6'>
+            <h2 className='text-4xl font-bold mt-4 text-shadow-2xs w-full text-center'>Create Account</h2>
             <form onSubmit={handleSubmit(submit)} className='h-full w-full flex justify-center items-center flex-col gap-4'>
                 <Input placeholder="Username" {...register("username", {required: true})} aria-invalid={errors.username ? 'true' : 'false'}/>
                 {errors.username?.type === 'required' && ( <p className='bg-warning text-warning-foreground' role='alert'>username is required</p> )}
@@ -33,9 +40,9 @@ function Register() {
                 {errors.email?.type === 'required' && ( <p className='bg-warning text-warning-foreground' role='alert'>email is required</p> )}
                 <Input placeholder="Password" type="password" {...register("password", {required: true})} aria-invalid={errors.password ? 'true' : 'false'}/>
                 {errors.password?.type === 'required' && ( <p className='bg-warning text-warning-foreground' role='alert'>password is required</p> )}
-
                 <Button bgColor='bg-purple-800' type='submit' className='w-30 h-8'>Register</Button>
             </form>
+            <p className='font-bold text-center'>Already have an account? <Link className='underline text-primary' to="/Login">Login</Link> here.</p>
         </div>
     </div>
   )
