@@ -1,22 +1,24 @@
 import conf from '../conf/conf'
-
+import { toast } from 'sonner';
 
 async function getCurrentUser(){
     const options = {method: 'GET', headers: {accept: 'application/json'}, credentials: 'include'};
 
     try {
         const response = await fetch(`${conf.authUrl}/current-user`, options)
+        
         if(!response.ok){
             console.error("API request failed with status: ", response.status)
-            return null
         }
 
         const apiData = await response.json()
 
-        if(!apiData){
-            console.error("Response return no data")
-            return null
+        if(!apiData.success){
+            toast("Error", {
+                description: apiData.message
+            })
         }
+
         return apiData
     } catch (error) {
         console.error("Error fetching current user: ", error)
@@ -28,16 +30,17 @@ async function register(user) {
 
     try {
         const response = await fetch(`${conf.authUrl}/register`, options)
+
         if(!response.ok){
             console.error("API request failed with status: ", response.status)
-            return null
         }
 
         const apiData = await response.json()
 
-        if(!apiData){
-            console.error("Response return no data")
-            return null
+        if(!apiData.success){
+            toast("Error", {
+                description: apiData.message
+            })
         }
 
         return apiData
@@ -55,14 +58,14 @@ async function login(user) {
 
         if(!response.ok){
             console.error("API request failed with status: ", response.status)
-            return null
         }
 
-        const apiData = response.json()
+        const apiData = await response.json()
 
-        if(!apiData){
-            console.error("Response return no data.")
-            return null
+        if(!apiData.success){
+            toast("Error", {
+                description: apiData.message
+            })
         }
 
         return apiData
@@ -81,14 +84,14 @@ async function logout() {
 
         if(!response.ok){
             console.error("API request failed with status: ", response.status)
-            return null
         }
 
-        const apiData = response.json()
+        const apiData = await response.json()
 
-        if(!apiData){
-            console.error("Response return no data")
-            return null
+        if(!apiData.success){
+            toast("Error", {
+                description: apiData.message
+            })
         }
 
         return apiData
@@ -105,14 +108,14 @@ async function refreshToken() {
 
         if(!response.ok){
             console.error("API request failed with status: ", response.status)
-            return null
         }
 
-        const apiData = response.json()
+        const apiData = await response.json()
 
-        if(!apiData){
-            console.error("Response return no data")
-            return null
+        if(!apiData.success){
+            toast("Error", {
+                description: apiData.message
+            })
         }
 
         return apiData
@@ -129,14 +132,14 @@ async function assignRole(userId, userAssignRole) {
 
         if(!response.ok){
             console.error("API request failed with status: ", response.status)
-            return null
         }
 
-        const apiData = response.json()
+        const apiData = await response.json()
 
-        if(!apiData){
-            console.error("Response return no data")
-            return null
+        if(!apiData.success){
+            toast("Error", {
+                description: apiData.message
+            })
         }
 
         return apiData
@@ -152,19 +155,19 @@ async function verifyEmail(token) {
 
         if(!response.ok){
             console.error("API request failed with status: ", response.status)
-            return null
         }
 
-        const apiData = response.json()
+        const apiData = await response.json()
 
-        if(!apiData){
-            console.error("Response return no data")
-            return null
+        if(!apiData.success){
+            toast("Error", {
+                description: apiData.message
+            })
         }
 
         return apiData
     } catch (error) {
-        console.error("Error while verifying the email: ", error)
+        return "Error while verifying the email"
     }
 }
 
@@ -177,19 +180,19 @@ async function resendVerificationEmail() {
 
         if(!response.ok){
             console.error("API request failed with status: ", response.status)
-            return null
         }
 
-        const apiData = response.json()
+        const apiData = await response.json()
 
-        if(!apiData){
-            console.error("Response return no data")
-            return null
+        if(!apiData.success){
+            toast("Error", {
+                description: apiData.message
+            })
         }
 
         return apiData
     } catch (error) {
-        console.error("Error fetching refreshToken: ", error)
+        return "Error fetching refreshToken"
     }
 }
 
