@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {Input, Button} from './index'
+import {Input, Button, LoadingButton} from './index'
 import { useForm } from 'react-hook-form'
 import { login } from '../api/userAuth'
 import {login as authLogin } from '../store/userAuthSlice'
@@ -7,12 +7,14 @@ import { useDispatch } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 
 function Login() {
+  const [loading, setLoading] = useState(false)
   const { register, handleSubmit, formState: {errors}, } = useForm()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const submit = async (userData)=>{
     try {
+      setLoading(true)
       const user = await login(userData).then((res)=> {
         return res.data.user
       })
@@ -29,9 +31,9 @@ function Login() {
     }
   }
 
-  return (
-    <div className='w-screen h-screen flex justify-center items-center p-4'>
-      <div className='w-120 h-auto bg-secondary rounded-lg p-4 flex justify-center items-center flex-col gap-6'>
+  return loading ? <div className='w-screen h-screen flex justify-center items-center p-4'><LoadingButton/></div> : (
+    <div className='w-screen h-screen flex justify-center items-center p-4 light:text-black'>
+      <div className='w-120 h-auto dark:bg-secondary bg-orange-200 rounded-lg p-4 flex justify-center items-center flex-col gap-6'>
         <h2 className='text-4xl font-bold mt-4 text-shadow-2xs w-full text-center'>Login</h2>
         <form onSubmit={handleSubmit(submit)} className='h-full w-full flex justify-center items-center flex-col gap-4'>
           <Input placeholder="Username" {...register("username", {required: true})} aria-invalid={errors.username ? 'true' : 'false'}/>

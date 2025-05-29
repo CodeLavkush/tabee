@@ -1,19 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { register as authRegister } from '../store/userAuthSlice'
 import { register as apiRegister  } from '../api/userAuth'
-import { Input, Button } from './index'
+import { Input, Button, LoadingButton } from './index'
 import { useNavigate, Link } from 'react-router-dom'
 import { toast } from 'sonner';
 
 function Register() {
+    const [loading, setLoading] = useState(false)
     const { register, handleSubmit, formState: {errors}, } = useForm()
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const submit = async (userData)=>{
         try {
+            setLoading(true)
             const data = await apiRegister(userData).then((res)=> {
                 toast("Message", {
                     description: res.message
@@ -29,9 +31,9 @@ function Register() {
             navigate('/register')
         }
     }
-  return (
+  return loading ? <div className='w-screen h-screen flex justify-center items-center p-4'><LoadingButton/></div> : (
     <div className='w-screen h-screen flex justify-center items-center p-4'>
-        <div className='w-120 h-auto bg-secondary rounded-lg flex justify-center items-center flex-col p-4 gap-6'>
+        <div className='w-120 h-auto dark:bg-secondary bg-orange-200 rounded-lg flex justify-center items-center flex-col p-4 gap-6'>
             <h2 className='text-4xl font-bold mt-4 text-shadow-2xs w-full text-center'>Create Account</h2>
             <form onSubmit={handleSubmit(submit)} className='h-full w-full flex justify-center items-center flex-col gap-4'>
                 <Input placeholder="Username" {...register("username", {required: true})} aria-invalid={errors.username ? 'true' : 'false'}/>

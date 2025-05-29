@@ -9,7 +9,7 @@ const Input = forwardRef(({
     const id = useId()
     return(
         <div className='w-full flex justify-center items-center'>
-            <UiInput type={type} className={`w-60 outline-none border-white border-1 p-2 rounded-md shadow-2xl text-white ${className}`} {...props} id={id} ref={ref}/>
+            <UiInput type={type} className={`w-60 outline-none border-black dark:border-white border-1 p-2 rounded-md shadow-2xl dark:text-white text-black ${className}`} {...props} id={id} ref={ref}/>
         </div>
     )
 })
