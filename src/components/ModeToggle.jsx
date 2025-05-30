@@ -36,18 +36,18 @@ export default function ModeToggle() {
 
   const handleLightTheme = () => {
     setTheme('light');
-    localStorage.setItem('vite-ui-theme', theme);
-    dispatch(setThemeSlice(theme));
+    localStorage.setItem('vite-ui-theme', 'light');
+    dispatch(setThemeSlice('light'));
   };
   const handleDarkTheme = () => {
     setTheme('dark');
-    localStorage.setItem('vite-ui-theme', theme);
-    dispatch(setThemeSlice(theme));
+    localStorage.setItem('vite-ui-theme', 'dark');
+    dispatch(setThemeSlice('dark'));
   };
   const handleSystemTheme = () => {
     setTheme('system');
-    localStorage.setItem('vite-ui-theme', theme);
-    dispatch(setThemeSlice(theme));
+    localStorage.setItem('vite-ui-theme', 'system');
+    dispatch(setThemeSlice('system'));
   };
 
   return (
