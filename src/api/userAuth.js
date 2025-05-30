@@ -144,7 +144,7 @@ async function assignRole(userId, userAssignRole) {
 
         return apiData
     } catch (error) {
-        console.error("Error fetching refreshToken: ", error)
+        console.error("Error while assign role: ", error)
     }
 }
 
@@ -166,7 +166,7 @@ async function verifyEmail(token) {
 
         return apiData
     } catch (error) {
-        return "Error while verifying the email"
+        console.error("Error while verifying the email ", error)
     }
 }
 
@@ -191,7 +191,7 @@ async function resendVerificationEmail() {
 
         return apiData
     } catch (error) {
-        return "Error fetching refreshToken"
+        console.error("Error fetching refreshToken ", error)
     }
 }
 
