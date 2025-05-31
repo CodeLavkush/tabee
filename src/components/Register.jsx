@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { register as authRegister, setLoading, setMessage } from '../store/userAuthSlice'
-import { register as apiRegister  } from '../api/userAuth'
 import { Input, Button, LoadingButton } from './index'
 import { useNavigate, Link } from 'react-router-dom'
+import { useAuthActions } from '../hooks/useAuthActions'
 
 
 function Register() {
+    const { userRegister } = useAuthActions()
     const loading = useSelector((state)=> state.userAuth.loading)
     const { register, handleSubmit, formState: {errors}, } = useForm()
     const dispatch = useDispatch()
@@ -16,12 +17,10 @@ function Register() {
     const submit = async (userData)=>{
         try {
             dispatch(setLoading(true))
-            const data = await apiRegister(userData, dispatch).then((res)=> {
-                useDispatch(setMessage({error: false, text: res.message}))
-                return res.data
-            })
-            if(data){
-                dispatch(authRegister(data.user))
+            const res = await userRegister(userData).then((res)=> res)
+            if(res.success){
+                dispatch(setMessage({error: false, text: res.message}))
+                dispatch(authRegister(res.data.user))
                 navigate('/login')
             }
         } catch (error) {

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
-import { verifyEmail, resendVerificationEmail, getCurrentUser } from '../api/userAuth'
 import { useDispatch, useSelector } from 'react-redux'
 import { setUser, setMessage } from '../store/userAuthSlice'
 import { Button } from '@/components/ui/button'
+import { useAuthActions } from '../hooks/useAuthActions'
 
 function VerifyEmail() {
+    const { verifyEmail, resendVerificationEmail, getCurrentUser } = useAuthActions()
     const { token } = useParams()
     const navigate = useNavigate()
     const [isEmailVerified , setIsEmailVerified] = useState(false)
@@ -14,8 +15,10 @@ function VerifyEmail() {
     
     const handleResendVerifyEmail = async ()=>{
         try {
-           await resendVerificationEmail(dispatch).then((res)=> {
-                dispatch(setMessage({error: false, text: res.message}))
+           await resendVerificationEmail().then((res)=> {
+                if(res.success){
+                    dispatch(setMessage({error: false, text: res.message}))
+                }
            })
         } catch (error) {
             console.error(error)
@@ -29,7 +32,8 @@ function VerifyEmail() {
                     return res.data
                 })
                 setIsEmailVerified(emailToken.isEmailVerified)
-                await getCurrentUser(dispatch).then((res)=> dispatch(setUser(res.data)))
+                const user = await getCurrentUser().then((res)=> res.data)
+                dispatch(setUser(user))
             } catch (error) {
                 console.error(error)
             }
