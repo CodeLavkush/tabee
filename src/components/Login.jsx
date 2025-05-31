@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {Input, Button, LoadingButton} from './index'
 import { useForm } from 'react-hook-form'
-import {login as authLogin, setLoading } from '../store/userAuthSlice'
+import {login as authLogin, setLoading, setMessage } from '../store/userAuthSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuthActions } from '../hooks/useAuthActions'
@@ -17,6 +17,9 @@ function Login() {
     try {
       dispatch(setLoading(true))
       const user = await login(userData).then((res)=> {
+        if(res.success){
+          dispatch(setMessage({error: false, text: res.message}))
+        }
         return res.data.user
       })
 

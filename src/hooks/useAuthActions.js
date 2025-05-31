@@ -17,7 +17,7 @@ export function useAuthActions(){
         return await authService.login(user, dispatch)
     }
 
-    const logout = async ()=>{
+    const userLogout = async ()=>{
         return await authService.logout(dispatch)
     }
 
@@ -41,7 +41,7 @@ export function useAuthActions(){
         getCurrentUser,
         userRegister,
         login,
-        logout,
+        userLogout,
         getRefreshToken,
         assignRole,
         resendVerificationEmail,

@@ -71,7 +71,7 @@ async function login(user, dispatch) {
 }
 
 async function logout(dispatch) {
-    const options = {method: 'POST', headers: {accept: 'application/json'}}
+    const options = {method: 'POST', headers: {accept: 'application/json'}, credentials: 'include'}
 
     try {
         const response = await fetch(`${conf.authUrl}/logout`, options)
