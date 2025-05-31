@@ -16,15 +16,13 @@ function Login() {
   const submit = async (userData)=>{
     try {
       dispatch(setLoading(true))
-      const user = await login(userData).then((res)=> {
+      const res = await login(userData).then((res)=> res)
+      
+      dispatch(authLogin(res.data.user))
+      if(res.data.user.isEmailVerified){
         if(res.success){
           dispatch(setMessage({error: false, text: res.message}))
-        }
-        return res.data.user
-      })
-
-      dispatch(authLogin(user))
-      if(user && user.isEmailVerified){
+        } 
         navigate('/chats')
       }else{
         navigate('/verify-email/:token')

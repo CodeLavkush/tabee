@@ -15,7 +15,6 @@ function Chats() {
   const handleLogout = async ()=>{
     try {
       await userLogout().then((res)=> {
-        console.log(res)
         if(res.success){
           dispatch(dispatch(setMessage({error: false, text: res.message})))
         }
@@ -34,7 +33,6 @@ function Chats() {
     const getUsers = async ()=>{
       try {
         const data = await getAvailableUsers().then((res)=> res.data)
-        console.log(data);
       } catch (error) {
         console.error(error)
       }

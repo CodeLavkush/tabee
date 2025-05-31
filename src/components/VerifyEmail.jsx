@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { useAuthActions } from '../hooks/useAuthActions'
 
 function VerifyEmail() {
-    const { verifyEmail, resendVerificationEmail, getCurrentUser } = useAuthActions()
+    const { verifyEmail, resendVerificationEmail } = useAuthActions()
     const { token } = useParams()
     const navigate = useNavigate()
     const [isEmailVerified , setIsEmailVerified] = useState(false)
@@ -28,12 +28,8 @@ function VerifyEmail() {
     useEffect(()=>{
         const confirmEmail = async ()=>{
             try {
-                const emailToken = await verifyEmail(token).then((res)=> {
-                    return res.data
-                })
+                const emailToken = await verifyEmail(token).then((res)=> res.data)
                 setIsEmailVerified(emailToken.isEmailVerified)
-                const user = await getCurrentUser().then((res)=> res.data)
-                dispatch(setUser(user))
             } catch (error) {
                 console.error(error)
             }
@@ -45,7 +41,7 @@ function VerifyEmail() {
         (
             <div className='h-screen w-screen flex justify-center items-center flex-col'>
                 <p className='text-2xl font-bold'>Your email is verified.</p>
-                <p className='text-xl tracking-widest font-light'>Start your <Link className='text-red-400 underline' to='/chats' >Chats</Link></p>
+                <p className='text-xl tracking-widest font-light'><Link className='text-red-400 underline' to='/login' >Log</Link> into your account</p>
             </div>
         ) : !status ? (
             <div className='h-screen w-screen flex justify-center items-center flex-col gap-2'>
