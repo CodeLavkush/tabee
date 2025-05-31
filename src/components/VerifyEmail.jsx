@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { verifyEmail, resendVerificationEmail, getCurrentUser } from '../api/userAuth'
 import { useDispatch, useSelector } from 'react-redux'
-import { setUser } from '../store/userAuthSlice'
+import { setUser, setMessage } from '../store/userAuthSlice'
 import { Button } from '@/components/ui/button'
-import { toast } from 'sonner';
 
 function VerifyEmail() {
     const { token } = useParams()
@@ -15,10 +14,8 @@ function VerifyEmail() {
     
     const handleResendVerifyEmail = async ()=>{
         try {
-           await resendVerificationEmail().then((res)=> {
-                toast("Message", {
-                    description: res.message
-                })
+           await resendVerificationEmail(dispatch).then((res)=> {
+                dispatch(setMessage({error: false, text: res.message}))
            })
         } catch (error) {
             console.error(error)
@@ -32,7 +29,7 @@ function VerifyEmail() {
                     return res.data
                 })
                 setIsEmailVerified(emailToken.isEmailVerified)
-                await getCurrentUser().then((res)=> dispatch(setUser(res.data)))
+                await getCurrentUser(dispatch).then((res)=> dispatch(setUser(res.data)))
             } catch (error) {
                 console.error(error)
             }

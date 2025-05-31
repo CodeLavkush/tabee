@@ -1,36 +1,37 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
-import { register as authRegister } from '../store/userAuthSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { register as authRegister, setLoading, setMessage } from '../store/userAuthSlice'
 import { register as apiRegister  } from '../api/userAuth'
 import { Input, Button, LoadingButton } from './index'
 import { useNavigate, Link } from 'react-router-dom'
-import { toast } from 'sonner';
+
 
 function Register() {
-    const [loading, setLoading] = useState(false)
+    const loading = useSelector((state)=> state.userAuth.loading)
     const { register, handleSubmit, formState: {errors}, } = useForm()
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const submit = async (userData)=>{
         try {
-            setLoading(true)
-            const data = await apiRegister(userData).then((res)=> {
-                toast("Message", {
-                    description: res.message
-                })
+            dispatch(setLoading(true))
+            const data = await apiRegister(userData, dispatch).then((res)=> {
+                useDispatch(setMessage({error: false, text: res.message}))
                 return res.data
             })
             if(data){
+                dispatch(setLoading(false))
                 dispatch(authRegister(data.user))
                 navigate('/login')
             }
         } catch (error) {
+            dispatch(setLoading(false))
             console.error(error)
             navigate('/register')
         }
     }
+
   return loading ? <div className='w-screen h-screen flex justify-center items-center p-4'><LoadingButton/></div> : (
     <div className='w-screen h-screen flex justify-center items-center p-4'>
         <div className='w-120 h-auto dark:bg-secondary bg-orange-200 rounded-lg flex justify-center items-center flex-col p-4 gap-6'>
@@ -42,7 +43,7 @@ function Register() {
                 {errors.email?.type === 'required' && ( <p className='bg-warning text-warning-foreground' role='alert'>email is required</p> )}
                 <Input placeholder="Password" type="password" {...register("password", {required: true})} aria-invalid={errors.password ? 'true' : 'false'}/>
                 {errors.password?.type === 'required' && ( <p className='bg-warning text-warning-foreground' role='alert'>password is required</p> )}
-                <Button bgColor='bg-purple-800' type='submit' className='w-30 h-8'>Register</Button>
+                <Button bgColor='bg-primary' type='submit' className='w-30 h-8'>Register</Button>
             </form>
             <p className='font-bold text-center'>Already have an account? <Link className='underline text-primary' to="/Login">Login</Link> here.</p>
         </div>

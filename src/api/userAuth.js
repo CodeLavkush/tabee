@@ -1,7 +1,7 @@
 import conf from '../conf/conf'
-import { toast } from 'sonner';
+import { setMessage } from '../store/userAuthSlice';
 
-async function getCurrentUser(){
+async function getCurrentUser(dispatch){
     const options = {method: 'GET', headers: {accept: 'application/json'}, credentials: 'include'};
 
     try {
@@ -14,9 +14,7 @@ async function getCurrentUser(){
         const apiData = await response.json()
 
         if(!apiData.success){
-            toast("Error", {
-                description: apiData.message
-            })
+            dispatch(setMessage({error: true, text: apiData.message}))
         }
 
         return apiData
@@ -25,7 +23,7 @@ async function getCurrentUser(){
     }
 }
 
-async function register(user) {
+async function register(user, dispatch) {
     const options = {method: 'POST', headers: {accept: 'application/json', 'content-type': 'application/json'}, body: JSON.stringify(user)};
 
     try {
@@ -38,9 +36,7 @@ async function register(user) {
         const apiData = await response.json()
 
         if(!apiData.success){
-            toast("Error", {
-                description: apiData.message
-            })
+            dispatch(setMessage({error: true, text: apiData.message}))
         }
 
         return apiData
@@ -50,7 +46,7 @@ async function register(user) {
     }
 }
 
-async function login(user) {
+async function login(user, dispatch) {
     const options = {method: 'POST', headers: {accept: 'application/json', 'content-type': 'application/json'}, body: JSON.stringify(user),  credentials: 'include'};
 
     try {
@@ -63,9 +59,7 @@ async function login(user) {
         const apiData = await response.json()
 
         if(!apiData.success){
-            toast("Error", {
-                description: apiData.message
-            })
+            dispatch(setMessage({error: true, text: apiData.message}))
         }
 
         return apiData
@@ -76,7 +70,7 @@ async function login(user) {
     
 }
 
-async function logout() {
+async function logout(dispatch) {
     const options = {method: 'POST', headers: {accept: 'application/json'}}
 
     try {
@@ -89,9 +83,7 @@ async function logout() {
         const apiData = await response.json()
 
         if(!apiData.success){
-            toast("Error", {
-                description: apiData.message
-            })
+            dispatch(setMessage({error: true, text: apiData.message}))
         }
 
         return apiData
@@ -100,7 +92,7 @@ async function logout() {
     }
 }
 
-async function refreshToken() {
+async function refreshToken(dispatch) {
     const options = {method: 'POST', headers: {accept: 'application/json'}};
 
     try {
@@ -113,9 +105,7 @@ async function refreshToken() {
         const apiData = await response.json()
 
         if(!apiData.success){
-            toast("Error", {
-                description: apiData.message
-            })
+            dispatch(setMessage({error: true, text: apiData.message}))
         }
 
         return apiData
@@ -124,7 +114,7 @@ async function refreshToken() {
     }
 }
 
-async function assignRole(userId, userAssignRole) {
+async function assignRole(userId, userAssignRole, dispatch) {
     const options = {method: 'POST', headers: {accept: 'application/json', 'content-type': 'application/json'}, body: JSON.stringify(userAssignRole)};
 
     try {
@@ -137,9 +127,7 @@ async function assignRole(userId, userAssignRole) {
         const apiData = await response.json()
 
         if(!apiData.success){
-            toast("Error", {
-                description: apiData.message
-            })
+            dispatch(setMessage({error: true, text: apiData.message}))
         }
 
         return apiData
@@ -170,7 +158,7 @@ async function verifyEmail(token) {
     }
 }
 
-async function resendVerificationEmail() {
+async function resendVerificationEmail(dispatch) {
 
     const options = {method: 'POST', headers: {accept: 'application/json'}, credentials: 'include'};
 
@@ -184,9 +172,7 @@ async function resendVerificationEmail() {
         const apiData = await response.json()
 
         if(!apiData.success){
-            toast("Error", {
-                description: apiData.message
-            })
+            dispatch(setMessage({error: true, text: apiData.message}))
         }
 
         return apiData

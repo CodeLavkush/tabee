@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { toast } from 'sonner';
+import { useDispatch, useSelector } from 'react-redux'
 import { getAvailableUsers } from '../api/chatApi';
+import { setMessage } from '../store/userAuthSlice';
 
 function Chats() {
   const [data, setData] = useState()
   const currentUser = useSelector((state)=> state.userAuth.userData)
+  const dispatch = useDispatch()
 
 
   useEffect(()=>{
     setData(currentUser)
     if(data){
-      toast("Message", {
-        description: `${data?.username} is successfully logged in.`
-      })
+      dispatch(setMessage({error: false, text: `${data?.username} is successfully logged in.`}))
     }
   }, [currentUser, data])
 
@@ -27,7 +26,6 @@ function Chats() {
         console.error(error)
       }
     }
-
     getUsers()
   }, [])
 
