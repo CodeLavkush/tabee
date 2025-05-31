@@ -21,14 +21,14 @@ function Register() {
                 return res.data
             })
             if(data){
-                dispatch(setLoading(false))
                 dispatch(authRegister(data.user))
                 navigate('/login')
             }
         } catch (error) {
-            dispatch(setLoading(false))
             console.error(error)
             navigate('/register')
+        } finally{
+            dispatch(setLoading(false))
         }
     }
 

@@ -21,16 +21,15 @@ function Login() {
 
       dispatch(authLogin(user))
       if(user && user.isEmailVerified){
-        dispatch(setLoading(false))
         navigate('/chats')
       }else{
-        dispatch(setLoading(false))
         navigate('/verify-email/:token')
       }
     } catch (error) {
-      dispatch(setLoading(false))
       console.error(error)
       navigate('/login')
+    }finally{
+      dispatch(setLoading(false))
     }
   }
 
