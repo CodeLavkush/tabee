@@ -16,7 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { Users, ListChats } from '../components/Chats/index'
+import { Users, ListChats, CreateChatForm } from '../components/Chats/index'
 
 function Chats() {
   const { userLogout } = useAuthActions();
@@ -59,7 +59,9 @@ function Chats() {
                   <SheetHeader>
                     <SheetTitle>Inbox</SheetTitle>
                     <SheetDescription>
+                      In profile section there are listed users click one of tham to copy there id and paste it here..
                     </SheetDescription>
+                      <CreateChatForm/>
                       <ListChats/>
                   </SheetHeader>
                   <SheetFooter>

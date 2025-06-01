@@ -23,6 +23,12 @@ const chatSlice = createSlice({
         setChats: (state, action)=>{
             state.chats = action.payload
         },
+        addChat: (state, action)=>{
+            const exists = state.chats.find(chat => chat._id === action.payload._id);
+            if (!exists) {
+                state.chats.push(action.payload);
+            }
+        },
         setGroupChats: (state, action)=>{
             state.groupChats = action.payload
         },
@@ -33,7 +39,7 @@ const chatSlice = createSlice({
 })
 
 
-export const { setChats, setUsers, setGroupChats, setLoading, setErrorMessage, setStatus, setMessages } = chatSlice.actions
+export const { setChats, setUsers, setGroupChats, setLoading, setErrorMessage, setStatus, setMessages, addChat } = chatSlice.actions
 
 
 export default chatSlice.reducer
