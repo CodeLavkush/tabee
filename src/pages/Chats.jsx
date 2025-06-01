@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAvailableUsers } from '../api/chatApi';
 import { setMessage, logout as authLogout } from '../store/userAuthSlice';
 import { useAuthActions } from '../hooks/useAuthActions';
 import { Button } from '@/components/ui/button';
@@ -17,13 +16,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
+import { Users } from '../components/Chats/index'
 
 function Chats() {
   const { userLogout } = useAuthActions();
   const [data, setData] = useState();
-  const [users, setUsers] = useState([])
   const currentUser = useSelector((state) => state.userAuth.userData);
   const dispatch = useDispatch();
 
@@ -45,17 +42,6 @@ function Chats() {
     setData(currentUser);
   }, [currentUser, data]);
 
-  useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const data = await getAvailableUsers().then((res) => res.data);
-        setUsers(data)
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getUsers();
-  }, []);
 
   return (
     <div className="text-white text-2xl h-screen w-screen flex justify-center items-center flex-col p-2">
@@ -99,9 +85,10 @@ function Chats() {
                 <SheetContent side='right'>
                   <SheetHeader>
                     <SheetTitle>Profile</SheetTitle>
-                    <SheetDescription>
+                    <SheetDescription className="text-center">
+                      Your account info
+                    </SheetDescription>
                       <div className='w-full flex justify-center items-center flex-col gap-2'>
-                        <h2 className='w-full font-bold text-center'>Your info</h2>
                         <div className='flex justify-center items-center gap-2 w-full'>
                           <User/>
                           <p>{data?.username}</p>
@@ -111,20 +98,7 @@ function Chats() {
                           <p>{data?.email}</p>
                         </div>
                       </div>
-                    </SheetDescription>
-                      <div className='w-full h-full mt-10'>
-                        <ScrollArea className="h-72 w-48 rounded-md border">
-                          <div className="p-4">
-                            <h4 className="mb-4 text-sm leading-none font-medium">Users</h4>
-                            {users ? users.map((user) => (
-                              <li className='list-none' key={user._id}>
-                                <Button variant={"ghost"} className="text-sm">{user.username}</Button>
-                                <Separator className="my-2" />
-                              </li>
-                            )) : ( <p>No users yet.</p>)}
-                          </div>
-                        </ScrollArea>
-                      </div>
+                      <Users/>
                   </SheetHeader>
                   <SheetFooter>
                     <SheetClose asChild>

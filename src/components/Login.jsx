@@ -14,6 +14,7 @@ function Login() {
   const navigate = useNavigate()
 
   const submit = async (userData)=>{
+    //TODO: add more ways to clean data and then send it..
     try {
       dispatch(setLoading(true))
       const res = await login(userData).then((res)=> res)
