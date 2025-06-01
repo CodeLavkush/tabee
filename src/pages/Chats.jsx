@@ -16,7 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { Users } from '../components/Chats/index'
+import { Users, ListChats } from '../components/Chats/index'
 
 function Chats() {
   const { userLogout } = useAuthActions();
@@ -60,6 +60,7 @@ function Chats() {
                     <SheetTitle>Inbox</SheetTitle>
                     <SheetDescription>
                     </SheetDescription>
+                      <ListChats/>
                   </SheetHeader>
                   <SheetFooter>
                     <SheetClose asChild>
@@ -79,7 +80,7 @@ function Chats() {
               <Sheet>
                 <SheetTrigger asChild>
                   <Button variant="outline" className='rounded-4xl shadow-2xl'>
-                    P
+                    {data?.username[0].toUpperCase()}
                   </Button>
                 </SheetTrigger>
                 <SheetContent side='right'>

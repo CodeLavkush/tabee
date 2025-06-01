@@ -7,11 +7,6 @@ const initialState = {
     chats: [],
     groupChats: [],
     messages: [],
-    loading: false,
-    errorMessage: {
-        error: false,
-        text: 'Error message'
-    },
 }
 
 
@@ -30,12 +25,6 @@ const chatSlice = createSlice({
         },
         setGroupChats: (state, action)=>{
             state.groupChats = action.payload
-        },
-        setLoading: (state, action)=>{
-            state.loading = action.payload
-        },
-        setErrorMessage: (state, action)=>{
-            state.errorMessage = action.payload
         },
         setMessages: (state, action)=>{
             state.messages = action.payload
