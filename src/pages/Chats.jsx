@@ -16,9 +16,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { Users, ListChats, CreateChatForm } from '../components/Chats/index'
+import { Users, ListChats, CreateChatForm, ChatMessages } from '../components/Chats/index'
+import { sendMessage as sendMessageAPI } from '../api/chatApi';
+import { setMessages } from '../store/ChatSlice';
 
 function Chats() {
+  const [chatMessage, setChatMessage] = useState([])
   const { userLogout } = useAuthActions();
   const [data, setData] = useState();
   const currentUser = useSelector((state) => state.userAuth.userData);
@@ -42,6 +45,21 @@ function Chats() {
   useEffect(() => {
     setData(currentUser);
   }, [currentUser, data]);
+
+
+  const sendMessage = async (e)=>{
+    e.preventDefault()
+    try {
+      const data = await sendMessageAPI(chat?._id, chatMessage).then((res)=> res.data)
+      if(data){
+        dispatch(setMessages(data))
+      }
+    } catch (error) {
+      console.error(error)
+    } finally{
+      setChatMessage('')
+    }
+  }
 
 
   return (
@@ -115,10 +133,13 @@ function Chats() {
             </li>
           </ul>
         </nav>
-        <div className="grid w-full gap-2 p-2">
-          <Textarea placeholder="Type your message here." maxLength={200} />{' '}
-          {/* TODO: Check max length in the backend */}
-          <Button><SendHorizonal/> Send message</Button>
+        <ChatMessages/>
+        <div className="w-full">
+          <form onSubmit={sendMessage} className='grid w-full gap-2 p-2'>
+            <Textarea placeholder="Type your message here." maxLength={200} value={chatMessage} onChange={(e)=> setChatMessage(e.target.value)}/>{' '}
+            {/* TODO: Check max length in the backend */}
+            <Button type="submit"><SendHorizonal/> Send message</Button>
+          </form>
         </div>
       </div>
     </div>

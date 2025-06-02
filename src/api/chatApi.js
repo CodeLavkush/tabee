@@ -278,8 +278,12 @@ async function getAllMessages(chatId) {
     }
 }
 
-async function sendMessage(chatId) {
-    const options = { method: 'POST', headers: {accept: 'application/json', 'content-type': 'multipart/form-data'}, credentials: 'include'}
+async function sendMessage(chatId, content) {
+
+    const formData = new FormData();
+    formData.append('content', content);
+
+    const options = { method: 'POST', headers: {accept: 'application/json',}, body: formData, credentials: 'include'}
 
     try {
         const response = await fetch(`${conf.messagesUrl}/${chatId}`, options)
