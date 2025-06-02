@@ -15,6 +15,7 @@ function Users() {
     const getUsers = async () => {
       try {
         const data = await getAvailableUsers().then((res) => res.data);
+        console.log(data)
         if (data) {
           dispatch(setUsersSlice(data));
           setUsers(data);

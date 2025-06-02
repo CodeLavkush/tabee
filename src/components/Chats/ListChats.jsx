@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { userChatList } from '../../api/chatApi';
 import { useDispatch, useSelector } from 'react-redux';
-import { setChats as setChatsSlice } from '../../store/ChatSlice';
+import { setChats as setChatsSlice, selectedChat } from '../../store/ChatSlice';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/Button';
+import { setMessage } from '../../store/userAuthSlice';
 
 function ListChats() {
   const dispatch = useDispatch();
@@ -24,6 +25,11 @@ function ListChats() {
     listChats();
   }, [dispatch]);
 
+  const handleSelectedChat = (chat)=>{
+    dispatch(selectedChat(chat))
+    dispatch(setMessage({error: false, text: `${chat.name} selected`}))
+  }
+
   return (
     <div className="w-full h-full mt-10">
       <ScrollArea className="h-72 w-48 rounded-md border">
@@ -34,7 +40,7 @@ function ListChats() {
           ) : (
             chats.map((chat) => (
               <div className="w-full" key={chat._id}>
-                <Button variant="ghost" className="text-sm w-full">
+                <Button onClick={()=> handleSelectedChat(chat)} variant="ghost" className="text-sm w-full">
                   {chat.name}
                 </Button>
                 <Separator className="my-2" />

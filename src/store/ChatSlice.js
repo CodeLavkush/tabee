@@ -5,6 +5,7 @@ const initialState = {
     status: 'offline',
     users: [],
     chats: [],
+    chat: null,
     groupChats: [],
     messages: [],
 }
@@ -14,6 +15,9 @@ const chatSlice = createSlice({
     name: 'chat',
     initialState,
     reducers: {
+        selectedChat: (state, action)=>{
+            state.chat = action.payload
+        },
         setStatus: (state, action)=>{
             state.status = action.payload
         },
@@ -39,7 +43,7 @@ const chatSlice = createSlice({
 })
 
 
-export const { setChats, setUsers, setGroupChats, setLoading, setErrorMessage, setStatus, setMessages, addChat } = chatSlice.actions
+export const { setChats, setUsers, setGroupChats, setLoading, setErrorMessage, setStatus, setMessages, addChat, selectedChat } = chatSlice.actions
 
 
 export default chatSlice.reducer

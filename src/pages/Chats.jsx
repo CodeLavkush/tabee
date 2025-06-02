@@ -22,6 +22,7 @@ function Chats() {
   const { userLogout } = useAuthActions();
   const [data, setData] = useState();
   const currentUser = useSelector((state) => state.userAuth.userData);
+  const chat = useSelector((state)=> state.Chat.chat)
   const dispatch = useDispatch();
 
   const handleLogout = async () => {
@@ -74,8 +75,8 @@ function Chats() {
             </li>
             <li>
               <Popover>
-                <PopoverTrigger>lavkush</PopoverTrigger>
-                <PopoverContent>Place content for the popover here.</PopoverContent>
+                <PopoverTrigger>{chat?.name}</PopoverTrigger>
+                <PopoverContent className="text-center">{`${chat?.participants[0].username} and ${chat?.participants[1].username}`}</PopoverContent>
               </Popover>
             </li>
             <li>
