@@ -20,6 +20,7 @@ import { Users, ListChats, CreateChatForm, ChatMessages } from '../components/Ch
 import { sendMessage as sendMessageAPI } from '../api/chatApi';
 import { setMessages } from '../store/ChatSlice';
 import Socket from '../Socket';
+import { ModeToggle } from '../components';
 
 function Chats() {
   const [chatMessage, setChatMessage] = useState([])
@@ -82,7 +83,7 @@ function Chats() {
             <li>
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" className='rounded-4xl shadow-2xl'>
+                  <Button variant="outline" className='rounded-4xl shadow-2xl text-black dark:text-white'>
                     <Inbox/>
                   </Button>
                 </SheetTrigger>
@@ -93,7 +94,9 @@ function Chats() {
                       In profile section there are listed users click one of tham to copy there id and paste it here..
                     </SheetDescription>
                       <CreateChatForm/>
-                      <ListChats/>
+                      <div className='w-full h-auto flex justify-center items-center mt-10'>
+                        <ListChats/>
+                      </div>
                   </SheetHeader>
                   <SheetFooter>
                     <SheetClose asChild>
@@ -112,7 +115,7 @@ function Chats() {
             <li>
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" className='rounded-4xl shadow-2xl'>
+                  <Button variant="outline" className='rounded-4xl shadow-2xl text-black dark:text-white'>
                     {currentUserData?.username[0].toUpperCase()}
                   </Button>
                 </SheetTrigger>
@@ -132,7 +135,12 @@ function Chats() {
                           <p>{currentUserData?.email}</p>
                         </div>
                       </div>
-                      <Users/>
+                      <div className='w-full h-auto flex justify-end items-center'>
+                        <ModeToggle/>
+                      </div>
+                      <div className='w-full h-auto flex justify-center items-center mt-10'>
+                        <Users/>
+                      </div>
                   </SheetHeader>
                   <SheetFooter>
                     <SheetClose asChild>

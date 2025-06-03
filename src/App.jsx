@@ -33,6 +33,7 @@ function App() {
     if (message !== null) {
       toast(message.error ? 'Error' : 'Message', {
         description: message.text,
+        className: "bg-red-200 dark:bg-red-600"
       });
     }
   }, [message]);

@@ -90,10 +90,10 @@ const ChatMessages = forwardRef((props, ref) => {
 
   return (
     <div className="w-full h-140 p-2">
-      <ScrollArea className="h-full w-full rounded-md border-1 border-white">
+      <ScrollArea className="h-full w-full rounded-md border-1 dark:border-white border-black">
         <div className={`p-4 flex justify-center flex-col h-auto w-full gap-2`}>
           {!messages[0] ? (
-            <p>No messages yet.</p>
+            <p className='text-black dark:text-white w-full h-full flex justify-center items-center'>No messages yet.</p>
           ) : (
             messages.map((message) => (
               <div
@@ -102,8 +102,8 @@ const ChatMessages = forwardRef((props, ref) => {
                   user?._id === message?.sender._id ? "bg-primary w-60" : "bg-slate-600 w-60"
                 }`}
               >
-                <div className="text-sm">{message?.sender.username}</div>
-                <div>{message?.content}</div>
+                <div className="text-sm font-bold tracking-wider">{message?.sender.username.toUpperCase()}</div>
+                <div className='text-xl font-medium'>{message?.content}</div>
                 {user?._id === message?.sender._id ? (
                   <div className="mt-4 w-full flex justify-end items-center">
                     <Button variant="destructive" onClick={() => deleteMessage(message?._id)}>

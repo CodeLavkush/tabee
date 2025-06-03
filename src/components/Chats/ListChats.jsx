@@ -38,7 +38,7 @@ function ListChats() {
   }
 
   return (
-    <div className="w-full h-full mt-10">
+    <div className="w-full h-full flex justify-center items-center">
       <ScrollArea className="h-72 w-48 rounded-md border">
         <div className="p-4">
           <h4 className="mb-4 text-sm leading-none font-medium">Chats</h4>

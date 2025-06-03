@@ -38,8 +38,8 @@ function CreateChatForm() {
 
   return (
     <div className="w-full h-auto flex justify-center items-center">
-      <div className="w-full bg-accent rounded-xl p-4 flex justify-center items-center flex-col gap-2">
-        <h2>Create new chat</h2>
+      <div className="w-full dark:bg-accent rounded-xl p-4 flex justify-center items-center flex-col gap-2">
+        <h2 className='text-black dark:text-white'>Create new chat</h2>
         <form
           onSubmit={handleSubmit(submit)}
           className="w-full h-full flex justify-center items-center gap-2 flex-col"
