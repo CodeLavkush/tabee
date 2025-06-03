@@ -6,10 +6,11 @@ function Button({
     type="button",
     bgColor='',
     className='',
+    variant='',
     ...props
 }) {
   return (
-    <UiButton className={`outline-none border-none cursor-pointer active:scale-[0.9] text-white transition-all hover:${bgColor} ${bgColor} shadow-lg rounded-md ${className}`} type={type} {...props}>{children}</UiButton>
+    <UiButton variant={variant} className={`outline-none border-none cursor-pointer active:scale-[0.9] text-white transition-all hover:${bgColor} ${bgColor} shadow-lg rounded-md ${className}`} type={type} {...props}>{children}</UiButton>
   )
 }
 

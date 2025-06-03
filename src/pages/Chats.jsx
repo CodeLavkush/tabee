@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMessage, logout as authLogout } from '../store/userAuthSlice';
 import { useAuthActions } from '../hooks/useAuthActions';
@@ -22,8 +22,9 @@ import { setMessages } from '../store/ChatSlice';
 
 function Chats() {
   const [chatMessage, setChatMessage] = useState([])
+  const chatMessagesRef = useRef()
   const { userLogout } = useAuthActions();
-  const [data, setData] = useState();
+  const [currentUserData, setCurrentUserData] = useState();
   const currentUser = useSelector((state) => state.userAuth.userData);
   const chat = useSelector((state)=> state.Chat.chat)
   const dispatch = useDispatch();
@@ -43,8 +44,8 @@ function Chats() {
   };
 
   useEffect(() => {
-    setData(currentUser);
-  }, [currentUser, data]);
+    setCurrentUserData(currentUser);
+  }, [currentUser, currentUserData]);
 
 
   const sendMessage = async (e)=>{
@@ -53,6 +54,7 @@ function Chats() {
       const data = await sendMessageAPI(chat?._id, chatMessage).then((res)=> res.data)
       if(data){
         dispatch(setMessages(data))
+        chatMessagesRef.current?.refreshMessages()
       }
     } catch (error) {
       console.error(error)
@@ -101,7 +103,7 @@ function Chats() {
               <Sheet>
                 <SheetTrigger asChild>
                   <Button variant="outline" className='rounded-4xl shadow-2xl'>
-                    {data?.username[0].toUpperCase()}
+                    {currentUserData?.username[0].toUpperCase()}
                   </Button>
                 </SheetTrigger>
                 <SheetContent side='right'>
@@ -113,11 +115,11 @@ function Chats() {
                       <div className='w-full flex justify-center items-center flex-col gap-2'>
                         <div className='flex justify-center items-center gap-2 w-full'>
                           <User/>
-                          <p>{data?.username}</p>
+                          <p>{currentUserData?.username}</p>
                         </div>
                         <div className='flex justify-center items-center gap-2 w-full'>
                           <Mail/>
-                          <p>{data?.email}</p>
+                          <p>{currentUserData?.email}</p>
                         </div>
                       </div>
                       <Users/>
@@ -133,7 +135,7 @@ function Chats() {
             </li>
           </ul>
         </nav>
-        <ChatMessages/>
+        <ChatMessages ref={chatMessagesRef}/>
         <div className="w-full">
           <form onSubmit={sendMessage} className='grid w-full gap-2 p-2'>
             <Textarea placeholder="Type your message here." maxLength={200} value={chatMessage} onChange={(e)=> setChatMessage(e.target.value)}/>{' '}
