@@ -6,10 +6,12 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/Button';
 import { setMessage } from '../../store/userAuthSlice';
+import Socket from '../../Socket';
 
 function ListChats() {
   const dispatch = useDispatch();
   const chats = useSelector((state) => state.Chat.chats);
+  const currentChat = useSelector((state)=> state.Chat.chat)
 
   useEffect(() => {
     const listChats = async () => {
@@ -26,6 +28,11 @@ function ListChats() {
   }, [dispatch]);
 
   const handleSelectedChat = (chat)=>{
+    if (currentChat?._id && currentChat._id !== chat._id) {
+      // Leave previous chat room before joining the new one
+      Socket.emit("leaveChat", currentChat._id);
+    }
+    Socket.emit("joinChat", chat?._id);
     dispatch(selectedChat(chat))
     dispatch(setMessage({error: false, text: `${chat.name} selected`}))
   }

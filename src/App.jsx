@@ -38,7 +38,6 @@ function App() {
   }, [message]);
 
   useEffect(() => {
-    Socket.connect();
 
     Socket.on('connected', () => {
       console.log('Socket connected');
@@ -47,10 +46,6 @@ function App() {
     Socket.on('socketError', (msg) => {
       console.error('Socket error:', msg);
     });
-
-    return () => {
-      Socket.disconnect();
-    };
   }, []);
 
   return (

@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { createOrGetChatOneOnOne } from '../../api/chatApi';
 import { addChat } from '../../store/ChatSlice';
 import { useDispatch } from 'react-redux';
+import Socket from '../../Socket';
 
 function CreateChatForm() {
   const dispatch = useDispatch();
@@ -23,7 +24,10 @@ function CreateChatForm() {
       const data = await createOrGetChatOneOnOne(formData.id).then((res) => res.data);
       if (data) {
         dispatch(addChat(data));
-        
+        Socket.emit('newChat', {
+          chat: data,
+          participants: data.participants.map((participant) => participant._id),
+        });
       }
     } catch (error) {
       console.error(error);

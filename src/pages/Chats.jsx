@@ -19,6 +19,7 @@ import {
 import { Users, ListChats, CreateChatForm, ChatMessages } from '../components/Chats/index'
 import { sendMessage as sendMessageAPI } from '../api/chatApi';
 import { setMessages } from '../store/ChatSlice';
+import Socket from '../Socket';
 
 function Chats() {
   const [chatMessage, setChatMessage] = useState([])
@@ -37,9 +38,16 @@ function Chats() {
             dispatch(dispatch(setMessage({ error: false, text: res.message })));
           }
         })
-        .finally(() => dispatch(authLogout()));
+        .finally(() => {
+          Socket.disconnect()
+          dispatch(authLogout())
+        });
     } catch (error) {
       console.error(error);
+    } finally{
+      if (chat?._id) {
+        Socket.emit("leaveChat", chat?._id);
+      }
     }
   };
 
@@ -56,6 +64,8 @@ function Chats() {
         dispatch(setMessages(data))
         chatMessagesRef.current?.refreshMessages()
       }
+
+      Socket.emit('new_message', data);
     } catch (error) {
       console.error(error)
     } finally{

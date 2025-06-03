@@ -14,8 +14,13 @@ const ChatMessages = forwardRef((props, ref) => {
   const dispatch = useDispatch();
   const [messages, setMessages] = useState([]);
 
+
+
   const fetchMessages = async () => {
     try {
+      if (!chat?._id) return;
+      Socket.emit("joinChat", chat?._id);
+
       const data = await getAllMessages(chat?._id).then((res) => res.data);
       if (data) {
         setMessages(data);
@@ -31,13 +36,12 @@ const ChatMessages = forwardRef((props, ref) => {
       const res = await deleteChatMessage(chat?._id, messageId).then((res) => res);
       if (res) {
         dispatch(setMessage({ error: false, text: res.message }));
-        fetchMessages();
 
         Socket.emit('messageDeleted', {
         chatId: chat._id,
         messageId,
         });
-        // Local update
+        
         setMessages((prev) => prev.filter((m) => m._id !== messageId));
       }
     } catch (error) {
@@ -53,17 +57,21 @@ const ChatMessages = forwardRef((props, ref) => {
     if (!chat?._id) return;
 
     const handleNewMessage = (message) => {
-      if (message.chat === chat._id) {
-        setMessages((prev) => [...prev, message]);
-        dispatch(setMessagesSlice([message, ...messages]));
-        fetchMessages();
+      if (message.chat === chat?._id) {
+        setMessages((prev) => {
+            const updated = [message, ...prev];
+            dispatch(setMessagesSlice(updated));
+            return updated;
+        });
       }
     };
 
     const handleMessageDeleted = ({ messageId }) => {
-        setMessages((prev) => prev.filter((m) => m._id !== messageId));
-        dispatch(setMessagesSlice(messages.filter((m) => m._id !== messageId)));
-        fetchMessages();
+        setMessages((prev) => {
+            const updatedMessages = prev.filter((m) => m._id !== messageId);
+            dispatch(setMessagesSlice(updatedMessages));
+            return updatedMessages;
+        });
     };
 
     Socket.on('messageDeleted', handleMessageDeleted);
@@ -74,7 +82,7 @@ const ChatMessages = forwardRef((props, ref) => {
         Socket.off('messageDeleted', handleMessageDeleted);
         Socket.off('messageReceived', handleNewMessage);
     };
-  }, [chat, messages]);
+  }, [chat]);
 
   useImperativeHandle(ref, () => ({
     refreshMessages: fetchMessages,
@@ -83,20 +91,20 @@ const ChatMessages = forwardRef((props, ref) => {
   return (
     <div className="w-full h-140 p-2">
       <ScrollArea className="h-full w-full rounded-md border-1 border-white">
-        <div className="p-4 flex flex-col gap-2 ">
+        <div className={`p-4 flex justify-center flex-col h-auto w-full gap-2`}>
           {!messages[0] ? (
             <p>No messages yet.</p>
           ) : (
             messages.map((message) => (
               <div
                 key={message?._id}
-                className={`w-full rounded-xl flex justify-center p-2 flex-col ${
-                  user._id === message?.sender._id ? 'bg-red-300' : 'bg-blue-300'
+                className={`rounded-xl w-full justify-center flex p-2 flex-col ${
+                  user?._id === message?.sender._id ? "bg-primary w-60" : "bg-slate-600 w-60"
                 }`}
               >
                 <div className="text-sm">{message?.sender.username}</div>
                 <div>{message?.content}</div>
-                {user._id === message?.sender._id ? (
+                {user?._id === message?.sender._id ? (
                   <div className="mt-4 w-full flex justify-end items-center">
                     <Button variant="destructive" onClick={() => deleteMessage(message?._id)}>
                       <Trash2 />

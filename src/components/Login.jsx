@@ -5,6 +5,7 @@ import {login as authLogin, setLoading, setMessage } from '../store/userAuthSlic
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuthActions } from '../hooks/useAuthActions'
+import Socket from '../Socket'
 
 function Login() {
   const { login } = useAuthActions()
@@ -23,7 +24,9 @@ function Login() {
       if(res.data.user.isEmailVerified){
         if(res.success){
           dispatch(setMessage({error: false, text: res.message}))
-        } 
+        }
+        Socket.auth = { token: res.data.accessToken }
+        Socket.connect()
         navigate('/chats')
       }else{
         navigate('/verify-email/:token')
