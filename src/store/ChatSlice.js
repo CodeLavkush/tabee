@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const initialState = {
-    status: 'offline',
     users: [],
     chats: [],
     chat: null,
@@ -17,9 +16,6 @@ const chatSlice = createSlice({
     reducers: {
         selectedChat: (state, action)=>{
             state.chat = action.payload
-        },
-        setStatus: (state, action)=>{
-            state.status = action.payload
         },
         setUsers: (state, action)=>{
             state.users = action.payload
@@ -38,12 +34,13 @@ const chatSlice = createSlice({
         },
         setMessages: (state, action)=>{
             state.messages = action.payload
-        }
+        },
+        restChatState: ()=> initialState,
     }
 })
 
 
-export const { setChats, setUsers, setGroupChats, setLoading, setErrorMessage, setStatus, setMessages, addChat, selectedChat } = chatSlice.actions
+export const { setChats, setUsers, setGroupChats, setLoading, setErrorMessage, setStatus, setMessages, addChat, selectedChat, restChatState } = chatSlice.actions
 
 
 export default chatSlice.reducer

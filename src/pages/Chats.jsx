@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/sheet';
 import { Users, ListChats, CreateChatForm, ChatMessages } from '../components/Chats/index';
 import { sendMessage as sendMessageAPI } from '../api/chatApi';
-import { setMessages } from '../store/ChatSlice';
+import { restChatState, setMessages } from '../store/ChatSlice';
 import Socket from '../Socket';
 import { ModeToggle } from '../components';
 
@@ -42,6 +42,7 @@ function Chats() {
         })
         .finally(() => {
           Socket.disconnect();
+          dispatch(restChatState())
           dispatch(authLogout());
         });
     } catch (error) {
@@ -182,7 +183,7 @@ function Chats() {
                       chatId: chat._id,
                       username: currentUserData.username,
                     });
-                  }, 2000);
+                  }, 600);
                 }
               }}
             />{' '}
