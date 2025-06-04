@@ -16,19 +16,20 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { Users, ListChats, CreateChatForm, ChatMessages } from '../components/Chats/index'
+import { Users, ListChats, CreateChatForm, ChatMessages } from '../components/Chats/index';
 import { sendMessage as sendMessageAPI } from '../api/chatApi';
 import { setMessages } from '../store/ChatSlice';
 import Socket from '../Socket';
 import { ModeToggle } from '../components';
 
 function Chats() {
-  const [chatMessage, setChatMessage] = useState([])
-  const chatMessagesRef = useRef()
+  const [chatMessage, setChatMessage] = useState([]);
+  const typingTimeoutRef = useRef(null);
+  const chatMessagesRef = useRef();
   const { userLogout } = useAuthActions();
   const [currentUserData, setCurrentUserData] = useState();
   const currentUser = useSelector((state) => state.userAuth.userData);
-  const chat = useSelector((state)=> state.Chat.chat)
+  const chat = useSelector((state) => state.Chat.chat);
   const dispatch = useDispatch();
 
   const handleLogout = async () => {
@@ -40,14 +41,14 @@ function Chats() {
           }
         })
         .finally(() => {
-          Socket.disconnect()
-          dispatch(authLogout())
+          Socket.disconnect();
+          dispatch(authLogout());
         });
     } catch (error) {
       console.error(error);
-    } finally{
+    } finally {
       if (chat?._id) {
-        Socket.emit("leaveChat", chat?._id);
+        Socket.emit('leaveChat', chat?._id);
       }
     }
   };
@@ -56,24 +57,22 @@ function Chats() {
     setCurrentUserData(currentUser);
   }, [currentUser, currentUserData]);
 
-
-  const sendMessage = async (e)=>{
-    e.preventDefault()
+  const sendMessage = async (e) => {
+    e.preventDefault();
     try {
-      const data = await sendMessageAPI(chat?._id, chatMessage).then((res)=> res.data)
-      if(data){
-        dispatch(setMessages(data))
-        chatMessagesRef.current?.refreshMessages()
+      const data = await sendMessageAPI(chat?._id, chatMessage).then((res) => res.data);
+      if (data) {
+        dispatch(setMessages(data));
+        chatMessagesRef.current?.refreshMessages();
       }
 
       Socket.emit('new_message', data);
     } catch (error) {
-      console.error(error)
-    } finally{
-      setChatMessage('')
+      console.error(error);
+    } finally {
+      setChatMessage('');
     }
-  }
-
+  };
 
   return (
     <div className="text-white text-2xl h-screen w-screen flex justify-center items-center flex-col p-2">
@@ -83,20 +82,24 @@ function Chats() {
             <li>
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" className='rounded-4xl shadow-2xl text-black dark:text-white'>
-                    <Inbox/>
+                  <Button
+                    variant="outline"
+                    className="rounded-4xl shadow-2xl text-black dark:text-white"
+                  >
+                    <Inbox />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side='left'>
+                <SheetContent side="left">
                   <SheetHeader>
                     <SheetTitle>Inbox</SheetTitle>
                     <SheetDescription>
-                      In profile section there are listed users click one of tham to copy there id and paste it here..
+                      In profile section there are listed users click one of tham to copy there id
+                      and paste it here..
                     </SheetDescription>
-                      <CreateChatForm/>
-                      <div className='w-full h-auto flex justify-center items-center mt-10'>
-                        <ListChats/>
-                      </div>
+                    <CreateChatForm />
+                    <div className="w-full h-auto flex justify-center items-center mt-10">
+                      <ListChats />
+                    </div>
                   </SheetHeader>
                   <SheetFooter>
                     <SheetClose asChild>
@@ -115,50 +118,78 @@ function Chats() {
             <li>
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" className='rounded-4xl shadow-2xl text-black dark:text-white'>
+                  <Button
+                    variant="outline"
+                    className="rounded-4xl shadow-2xl text-black dark:text-white"
+                  >
                     {currentUserData?.username[0].toUpperCase()}
                   </Button>
                 </SheetTrigger>
-                <SheetContent side='right'>
+                <SheetContent side="right">
                   <SheetHeader>
                     <SheetTitle>Profile</SheetTitle>
-                    <SheetDescription className="text-center">
-                      Your account info
-                    </SheetDescription>
-                      <div className='w-full flex justify-center items-center flex-col gap-2'>
-                        <div className='flex justify-center items-center gap-2 w-full'>
-                          <User/>
-                          <p>{currentUserData?.username}</p>
-                        </div>
-                        <div className='flex justify-center items-center gap-2 w-full'>
-                          <Mail/>
-                          <p>{currentUserData?.email}</p>
-                        </div>
+                    <SheetDescription className="text-center">Your account info</SheetDescription>
+                    <div className="w-full flex justify-center items-center flex-col gap-2">
+                      <div className="flex justify-center items-center gap-2 w-full">
+                        <User />
+                        <p>{currentUserData?.username}</p>
                       </div>
-                      <div className='w-full h-auto flex justify-end items-center'>
-                        <ModeToggle/>
+                      <div className="flex justify-center items-center gap-2 w-full">
+                        <Mail />
+                        <p>{currentUserData?.email}</p>
                       </div>
-                      <div className='w-full h-auto flex justify-center items-center mt-10'>
-                        <Users/>
-                      </div>
+                    </div>
+                    <div className="w-full h-auto flex justify-end items-center">
+                      <ModeToggle />
+                    </div>
+                    <div className="w-full h-auto flex justify-center items-center mt-10">
+                      <Users />
+                    </div>
                   </SheetHeader>
                   <SheetFooter>
                     <SheetClose asChild>
                       <Button variant="outline">Close</Button>
                     </SheetClose>
-                    <Button variant={"destructive"} onClick={handleLogout}>Logout</Button>
+                    <Button variant={'destructive'} onClick={handleLogout}>
+                      Logout
+                    </Button>
                   </SheetFooter>
                 </SheetContent>
               </Sheet>
             </li>
           </ul>
         </nav>
-        <ChatMessages ref={chatMessagesRef}/>
+        <ChatMessages ref={chatMessagesRef} />
         <div className="w-full">
-          <form onSubmit={sendMessage} className='grid w-full gap-2 p-2'>
-            <Textarea placeholder="Type your message here." maxLength={200} value={chatMessage} onChange={(e)=> setChatMessage(e.target.value)}/>{' '}
+          <form onSubmit={sendMessage} className="grid w-full gap-2 p-2">
+            <Textarea
+              placeholder="Type your message here."
+              maxLength={200}
+              value={chatMessage}
+              onChange={(e) => {
+                setChatMessage(e.target.value);
+
+                if (chat?._id && currentUserData?.username) {
+                  Socket.emit("typing", {
+                    chatId: chat?._id,
+                    username: currentUserData?.username,
+                  });
+
+                  if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+
+                  typingTimeoutRef.current = setTimeout(() => {
+                    Socket.emit("stopTyping", {
+                      chatId: chat._id,
+                      username: currentUserData.username,
+                    });
+                  }, 2000);
+                }
+              }}
+            />{' '}
             {/* TODO: Check max length in the backend */}
-            <Button type="submit"><SendHorizonal/> Send message</Button>
+            <Button type="submit">
+              <SendHorizonal /> Send message
+            </Button>
           </form>
         </div>
       </div>

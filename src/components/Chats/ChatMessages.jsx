@@ -1,4 +1,11 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  useState,
+  useCallback,
+} from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteChatMessage, getAllMessages } from '../../api/chatApi';
@@ -11,15 +18,16 @@ import Socket from '../../Socket';
 const ChatMessages = forwardRef((props, ref) => {
   const chat = useSelector((state) => state.Chat.chat);
   const user = useSelector((state) => state.userAuth.userData);
+  const [typingUser, setTypingUser] = useState(null);
+  const chatIdRef = useRef();
   const dispatch = useDispatch();
   const [messages, setMessages] = useState([]);
-
-
 
   const fetchMessages = async () => {
     try {
       if (!chat?._id) return;
-      Socket.emit("joinChat", chat?._id);
+
+      Socket.emit('joinChat', chat?._id);
 
       const data = await getAllMessages(chat?._id).then((res) => res.data);
       if (data) {
@@ -38,10 +46,10 @@ const ChatMessages = forwardRef((props, ref) => {
         dispatch(setMessage({ error: false, text: res.message }));
 
         Socket.emit('messageDeleted', {
-        chatId: chat._id,
-        messageId,
+          chatId: chat._id,
+          messageId,
         });
-        
+
         setMessages((prev) => prev.filter((m) => m._id !== messageId));
       }
     } catch (error) {
@@ -54,33 +62,59 @@ const ChatMessages = forwardRef((props, ref) => {
   }, [chat]);
 
   useEffect(() => {
+    chatIdRef.current = chat?._id;
+  }, [chat?._id]);
+
+  const handleTyping = useCallback(({ chatId, username }) => {
+    if (chatId === chatIdRef.current) {
+      setTypingUser(username);
+    }
+  }, []);
+
+  const handleStopTyping = useCallback(({ chatId, username }) => {
+    if (chatId === chatIdRef.current) {
+      setTypingUser(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    Socket.on('typing', handleTyping);
+    Socket.on('stopTyping', handleStopTyping);
+
+
+    return () => {
+      Socket.off('typing', handleTyping);
+      Socket.off('stopTyping', handleStopTyping);
+    };
+  }, [handleTyping, handleStopTyping]);
+
+  useEffect(() => {
     if (!chat?._id) return;
 
     const handleNewMessage = (message) => {
       if (message.chat === chat?._id) {
         setMessages((prev) => {
-            const updated = [message, ...prev];
-            dispatch(setMessagesSlice(updated));
-            return updated;
+          const updated = [message, ...prev];
+          dispatch(setMessagesSlice(updated));
+          return updated;
         });
       }
     };
 
     const handleMessageDeleted = ({ messageId }) => {
-        setMessages((prev) => {
-            const updatedMessages = prev.filter((m) => m._id !== messageId);
-            dispatch(setMessagesSlice(updatedMessages));
-            return updatedMessages;
-        });
+      setMessages((prev) => {
+        const updatedMessages = prev.filter((m) => m._id !== messageId);
+        dispatch(setMessagesSlice(updatedMessages));
+        return updatedMessages;
+      });
     };
 
     Socket.on('messageDeleted', handleMessageDeleted);
-
     Socket.on('messageReceived', handleNewMessage);
 
     return () => {
-        Socket.off('messageDeleted', handleMessageDeleted);
-        Socket.off('messageReceived', handleNewMessage);
+      Socket.off('messageDeleted', handleMessageDeleted);
+      Socket.off('messageReceived', handleNewMessage);
     };
   }, [chat]);
 
@@ -91,19 +125,26 @@ const ChatMessages = forwardRef((props, ref) => {
   return (
     <div className="w-full h-140 p-2">
       <ScrollArea className="h-full w-full rounded-md border-1 dark:border-white border-black">
-        <div className={`p-4 flex justify-center flex-col h-auto w-full gap-2`}>
-          {!messages[0] ? (
-            <p className='text-black dark:text-white w-full h-full flex justify-center items-center'>No messages yet.</p>
+        <div className="p-4 flex justify-center flex-col h-auto w-full gap-2">
+          {typingUser && (
+            <div className="text-sm italic text-white px-4">{typingUser} is typing...</div>
+          )}
+          {!messages[0] && !typingUser ? (
+            <p className="text-black dark:text-white w-full h-full flex justify-center items-center">
+              No messages yet.
+            </p>
           ) : (
             messages.map((message) => (
               <div
                 key={message?._id}
-                className={`rounded-xl w-full justify-center flex p-2 flex-col ${
-                  user?._id === message?.sender._id ? "bg-primary w-60" : "bg-slate-600 w-60"
+                className={`rounded-xl w-full h-full justify-center flex p-2 flex-col ${
+                  user?._id === message?.sender._id ? 'bg-primary w-60' : 'bg-slate-600 w-60'
                 }`}
               >
-                <div className="text-sm font-bold tracking-wider">{message?.sender.username.toUpperCase()}</div>
-                <div className='text-xl font-medium'>{message?.content}</div>
+                <div className="text-sm font-bold tracking-wider">
+                  {message?.sender.username.toUpperCase()}
+                </div>
+                <div className="text-xl font-medium">{message?.content}</div>
                 {user?._id === message?.sender._id ? (
                   <div className="mt-4 w-full flex justify-end items-center">
                     <Button variant="destructive" onClick={() => deleteMessage(message?._id)}>
