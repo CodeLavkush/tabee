@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { setUser, setMessage } from '../store/userAuthSlice'
-import { Button } from '@/components/ui/button'
+import { setMessage, setLoading } from '../store/userAuthSlice'
+import { Button } from './index'
 import { useAuthActions } from '../hooks/useAuthActions'
+import {LoadingButton} from './index'
 
 function VerifyEmail() {
     const { verifyEmail, resendVerificationEmail } = useAuthActions()
@@ -12,6 +13,7 @@ function VerifyEmail() {
     const [isEmailVerified , setIsEmailVerified] = useState(false)
     const dispatch = useDispatch()
     const status = useSelector((state)=> state.userAuth.status)
+    const loading = useSelector((state)=> state.userAuth.loading)
     
     const handleResendVerifyEmail = async ()=>{
         try {
@@ -28,16 +30,19 @@ function VerifyEmail() {
     useEffect(()=>{
         const confirmEmail = async ()=>{
             try {
+                setLoading(true)
                 const emailToken = await verifyEmail(token).then((res)=> res.data)
                 setIsEmailVerified(emailToken.isEmailVerified)
             } catch (error) {
                 console.error(error)
+            } finally{
+                setLoading(false)
             }
         }
         confirmEmail()
     }, [token, navigate])
 
-    return isEmailVerified ? 
+    return loading ? <LoadingButton/> : isEmailVerified ? 
         (
             <div className='h-screen w-screen flex justify-center items-center flex-col'>
                 <p className='text-2xl font-bold'>Your email is verified.</p>
