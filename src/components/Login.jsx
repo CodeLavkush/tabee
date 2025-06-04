@@ -15,7 +15,6 @@ function Login() {
   const navigate = useNavigate()
 
   const submit = async (userData)=>{
-    //TODO: add more ways to clean data and then send it..
     try {
       dispatch(setLoading(true))
       const res = await login(userData).then((res)=> res)
@@ -44,10 +43,10 @@ function Login() {
       <div className='w-120 h-auto dark:bg-secondary bg-orange-200 rounded-lg p-4 flex justify-center items-center flex-col gap-6'>
         <h2 className='text-4xl font-bold mt-4 text-shadow-2xs w-full text-center'>Login</h2>
         <form onSubmit={handleSubmit(submit)} className='h-full w-full flex justify-center items-center flex-col gap-4'>
-          <Input placeholder="Username" {...register("username", {required: true})} aria-invalid={errors.username ? 'true' : 'false'}/>
-          {errors.username?.type === "required" && ( <p className='text-warning-foreground bg-warning' role='alert'>username is required</p> )}
-          <Input placeholder="Password" type="password" {...register("password", {required: true})} aria-invalid={errors.password ? 'true' : 'false'}/>
-          {errors.password?.type === "required" && ( <p className='text-warning-foreground bg-warning' role='alert'>password is required</p> )}
+          <Input placeholder="Username" {...register("username", {required: 'Username is required'})} aria-invalid={errors.username ? 'true' : 'false'}/>
+          {errors.username && ( <p className='text-red-400 text-sm font-bold' role='alert'>{errors.username.message}</p> )}
+          <Input placeholder="Password" type="password" {...register("password", {required: 'Password is required'})} aria-invalid={errors.password ? 'true' : 'false'}/>
+          {errors.password && ( <p className='text-red-400 text-sm font-bold' role='alert'>{errors.password.message}</p> )}
           <Button bgColor='bg-primary' type='submit' className='w-30 h-8'>Login</Button>
         </form>
         <p className='font-bold text-center'>Don't have an account <Link className='underline text-primary' to="/register">Register</Link> here.</p>
