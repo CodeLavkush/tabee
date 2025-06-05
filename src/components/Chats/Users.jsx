@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { getAvailableUsers } from '../../api/chatApi';
-import { Button } from '@/components/ui/Button';
+import Button from '@/components/ui/button';
 import { useDispatch } from 'react-redux';
 import { setUsers as setUsersSlice } from '../../store/ChatSlice';
 import { setMessage } from '../../store/userAuthSlice';

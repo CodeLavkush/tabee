@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setChats as setChatsSlice, selectedChat } from '../../store/ChatSlice';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/Button';
+import Button from '@/components/ui/button';
 import { setMessage } from '../../store/userAuthSlice';
 import Socket from '../../Socket';
 
