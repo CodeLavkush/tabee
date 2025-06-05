@@ -27,7 +27,7 @@ function Login() {
         dispatch(setMessage({ error: false, text: res.message }));
       }
 
-      dispatch(authLogin(res.data.user));
+      dispatch(authLogin(res.data));
       Socket.auth = { token: res.data.accessToken };
       Socket.connect();
       navigate('/chats');
