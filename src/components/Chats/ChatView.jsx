@@ -163,7 +163,7 @@ function ChatView() {
         <div className="w-full">
           <form onSubmit={sendMessage} className="grid w-full gap-2 p-2">
             <Textarea
-              className="text-white dark:text-black"
+              className="text-black dark:text-white"
               placeholder="Type your message here."
               maxLength={200}
               value={chatMessage}
