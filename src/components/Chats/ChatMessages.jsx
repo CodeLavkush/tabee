@@ -127,7 +127,7 @@ const ChatMessages = forwardRef((props, ref) => {
       <ScrollArea className="h-full w-full rounded-md border-1 dark:border-white border-black">
         <div className="p-4 flex justify-center flex-col h-auto w-full gap-2">
           {typingUser && (
-            <div className="text-sm italic text-white px-4">{typingUser} is typing...</div>
+            <div className="text-sm italic text-black dark:text-white px-4">{typingUser} is typing...</div>
           )}
           {!messages[0] && !typingUser ? (
             <p className="text-black dark:text-white w-full h-full flex justify-center items-center">
