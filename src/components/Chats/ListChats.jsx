@@ -12,6 +12,7 @@ function ListChats() {
   const dispatch = useDispatch();
   const chats = useSelector((state) => state.Chat.chats);
   const currentChat = useSelector((state)=> state.Chat.chat)
+  const user = useSelector((state)=> state.userAuth.userData)
 
   useEffect(() => {
     const listChats = async () => {
@@ -48,7 +49,7 @@ function ListChats() {
             chats.map((chat) => (
               <div className="w-full" key={chat._id}>
                 <Button onClick={()=> handleSelectedChat(chat)} variant="ghost" className="text-sm w-full">
-                  {chat.name}
+                  {chat.participants.map((participant)=> participant.username !== user.username ? participant.username : null)}
                 </Button>
                 <Separator className="my-2" />
               </div>

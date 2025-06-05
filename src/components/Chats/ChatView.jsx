@@ -111,7 +111,7 @@ function ChatView() {
             </li>
             <li>
               <Popover>
-                <PopoverTrigger>{chat?.name}</PopoverTrigger>
+                <PopoverTrigger>{chat?.participants.map((participant)=> participant.username !== currentUser.username ? participant.username : null)}</PopoverTrigger>
                 <PopoverContent className="text-center">{`${chat?.participants[0].username} and ${chat?.participants[1].username}`}</PopoverContent>
               </Popover>
             </li>
