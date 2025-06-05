@@ -31,6 +31,8 @@ function ChatView() {
   const chat = useSelector((state) => state.Chat.chat);
   const dispatch = useDispatch();
 
+  console.log(currentUser)
+
   const handleLogout = async () => {
     try {
       await userLogout()
