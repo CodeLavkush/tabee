@@ -31,8 +31,6 @@ function ChatView() {
   const chat = useSelector((state) => state.Chat.chat);
   const dispatch = useDispatch();
 
-  console.log(currentUser)
-
   const handleLogout = async () => {
     try {
       await userLogout()
@@ -124,7 +122,7 @@ function ChatView() {
                     variant="outline"
                     className="rounded-4xl shadow-2xl text-black dark:text-white"
                   >
-                    {currentUserData?.username?.toUpperCase()}
+                    {currentUserData?.username.toUpperCase()}
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="right">
