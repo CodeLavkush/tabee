@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button as UiButton} from '@/components/ui/Button'
+import { Button as UiButton} from '@/components/ui/button'
 
 function Button({
     children,
